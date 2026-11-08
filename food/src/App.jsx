@@ -472,7 +472,7 @@ export default function FruitBlogWebsite() {
             <p className="text-muted-foreground">Abhi koi post nahi hai.</p>
           )}
           {getMyPosts().map((post) => (
-            <div key={post.file} className="card overflow-hidden">
+            <div key={post.file} className="card overflow-hidden cursor-pointer" onClick={() => setSelectedPost(post)}>
               {post.image && (
                 <img src={post.image} alt={post.title} className="h-48 w-full object-cover" />
               )}
