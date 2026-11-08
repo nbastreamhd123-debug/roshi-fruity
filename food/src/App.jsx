@@ -463,6 +463,33 @@ export default function FruitBlogWebsite() {
             </div>
           ))}
         </div>
+              {/* Post Open - Jab click karo */}
+      {selectedPost && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4" onClick={() => setSelectedPost(null)}>
+          <div className="card max-w-2xl w-full max-h- overflow-auto bg-white p-4" onClick={(e) => e.stopPropagation()}>
+            {selectedPost.image && (
+              <img src={selectedPost.image} alt={selectedPost.title} className="w-full h-64 object-cover rounded-lg mb-4" />
+            )}
+            <h2 className="text-2xl font-bold mb-2">{selectedPost.title}</h2>
+            <p className="text-sm text-muted-foreground whitespace-pre-line mb-4">{selectedPost.body}</p>
+            <div className="flex gap-2">
+              <button
+                className="btn btn-default"
+                onClick={() => {
+                  navigator.clipboard.writeText(window.location.origin + "/#" + selectedPost.file)
+                  alert("Link Copy Ho Gaya!")
+                }}
+              >
+                Copy Link
+              </button>
+              <button className="btn btn-outline" onClick={() => setSelectedPost(null)}>
+                Close
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       </section>
           {/* Latest Posts - Panel se */}
       <section>
