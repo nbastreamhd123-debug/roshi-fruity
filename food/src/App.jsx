@@ -464,9 +464,9 @@ export default function FruitBlogWebsite() {
           ))}
         </div>
       </section>
-          {/* Meri Posts - Panel se */}
+          {/* Latest Posts - Panel se */}
       <section>
-        <h2 className="mb-6 text-2xl font-bold">Meri Posts</h2>
+        <h2 className="mb-6 text-2xl font-bold">Latest Posts</h2>
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
           {getMyPosts().length === 0 && (
             <p className="text-muted-foreground">Abhi koi post nahi hai.</p>
