@@ -1,12 +1,12 @@
 {
   "backend": {"name": "git-gateway", "branch": "main"},
-  "media_folder": "public/uploads",
+"media_folder": "food/public/uploads",
   "public_folder": "/uploads",
   "collections": [
     {
       "name": "posts",
       "label": "Meri Posts",
-      "folder": "src/posts",
+      "folder": "food/src/posts",
       "create": true,
       "slug": "{{slug}}",
       "fields": [
