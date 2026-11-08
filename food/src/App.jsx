@@ -141,7 +141,7 @@ export default function FruitBlogWebsite() {
   const [searchTerm, setSearchTerm] = useState("")
   const [selectedFruitsForComparison, setSelectedFruitsForComparison] = useState([])
   const [showComparison, setShowComparison] = useState(false)
-
+  const [selectedPost, setSelectedPost] = useState(null)
   // Refs for smooth scrolling
   const featuredFruitsRef = useRef(null)
 
