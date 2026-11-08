@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useRef } from "react"
+import { useState, useRef, useEffect } from "react"
 import { Heart, Star, Clock, Users, Mail, Phone, MapPin, Menu, X } from "lucide-react"
 
 // Import images from assets folder
@@ -113,6 +113,26 @@ const fruitsData = [
     },
   },
 ]
+const postFiles = import.meta.glob("./posts/*.md", { query: "?raw", import: "default", eager: true })
+
+function getMyPosts() {
+  return Object.entries(postFiles).map(([path, content]) => {
+    const text = String(content)
+    const match = text.match(/---([\s\S]*?)---([\s\S]*)/)
+    const front = match ? match[1] : ""
+    const body = match ? match[2] : text
+    const getField = (name) => {
+      const m = front.match(new RegExp(name + ":\\s*(.*)"))
+      return m ? m[1].replace(/['"]/g, "").trim() : ""
+    }
+    return {
+      title: getField("title") || "Meri Post",
+      image: getField("image"),
+      body: body.trim(),
+      file: path,
+    }
+  })
+}
 
 export default function FruitBlogWebsite() {
   const [activeSection, setActiveSection] = useState("home")
@@ -444,6 +464,29 @@ export default function FruitBlogWebsite() {
           ))}
         </div>
       </section>
+          {/* Meri Posts - Panel se */}
+      <section>
+        <h2 className="mb-6 text-2xl font-bold">Meri Posts</h2>
+        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+          {getMyPosts().length === 0 && (
+            <p className="text-muted-foreground">Abhi koi post nahi hai.</p>
+          )}
+          {getMyPosts().map((post) => (
+            <div key={post.file} className="card overflow-hidden">
+              {post.image && (
+                <img src={post.image} alt={post.title} className="h-48 w-full object-cover" />
+              )}
+              <div className="card-header">
+                <h3 className="card-title text-xl">{post.title}</h3>
+              </div>
+              <div className="card-content">
+                <p className="text-sm text-muted-foreground whitespace-pre-line">{post.body}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+
     </div>
   )
 
