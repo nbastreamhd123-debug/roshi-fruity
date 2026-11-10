@@ -1,5 +1,0 @@
----
-title: fsdfasfdzsfzsfs
-image: /uploads/287b954f-36a3-48c2-b55e-f778a898ba05.jpg
----
-fdsvgdzvxSF
