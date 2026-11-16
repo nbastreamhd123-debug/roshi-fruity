@@ -144,9 +144,10 @@ async function getWordPressPosts() {
       }
     })
   } catch (e) {
+
     return []
   }
-
+}
 export default function FruitBlogWebsite() {
   const [activeSection, setActiveSection] = useState("home")
   const [expandedFruit, setExpandedFruit] = useState(null)
