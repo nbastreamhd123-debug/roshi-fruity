@@ -8,6 +8,7 @@ import Apple from "./assets/Apple.jpg"
 import Banana from "./assets/Banana.jpg"
 import orange from "./assets/orange.jpg"
 import fruite2 from "./assets/fruite2.jpg"
+const WP_API = "https://985680751.online/wp-json/wp/v2/posts?per_page=100&_embed"
 
 // Mock data for fruits with local images
 const fruitsData = [
@@ -113,26 +114,38 @@ const fruitsData = [
     },
   },
 ]
-const postFiles = import.meta.glob("./posts/*.md", { query: "?raw", import: "default", eager: true })
-
-function getMyPosts() {
-  return Object.entries(postFiles).map(([path, content]) => {
-    const text = String(content)
-    const match = text.match(/---([\s\S]*?)---([\s\S]*)/)
-    const front = match ? match[1] : ""
-    const body = match ? match[2] : text
-    const getField = (name) => {
-      const m = front.match(new RegExp(name + ":\\s*(.*)"))
-      return m ? m[1].replace(/['"]/g, "").trim() : ""
-    }
-    return {
-      title: getField("title") || "Meri Post",
-      image: getField("image"),
-      body: body.trim(),
-      file: path,
-    }
-  })
+// WordPress se posts laane wala function
+function stripHtml(html) {
+  const tmp = document.createElement("div")
+  tmp.innerHTML = html || ""
+  return tmp.textContent || tmp.innerText || ""
 }
+
+async function getWordPressPosts() {
+  try {
+    const res = await fetch(WP_API)
+    if (!res.ok) return []
+    const data = await res.json()
+    return data.map((p) => {
+      const img = p._embedded?.["wp:featuredmedia"]?.[0]?.source_url || ""
+      const cats = p._embedded?.["wp:term"]?.[0]?.map((c) => c.name) || []
+      const tags = p._embedded?.["wp:term"]?.[1]?.map((t) => t.name) || []
+      return {
+        title: stripHtml(p.title?.rendered),
+        body: stripHtml(p.content?.rendered),
+        excerpt: stripHtml(p.excerpt?.rendered),
+        image: img,
+        date: p.date,
+        link: p.link,
+        slug: p.slug,
+        categories: cats,
+        tags: tags,
+        file: "wp-" + p.id,
+      }
+    })
+  } catch (e) {
+    return []
+  }
 
 export default function FruitBlogWebsite() {
   const [activeSection, setActiveSection] = useState("home")
@@ -142,6 +155,14 @@ export default function FruitBlogWebsite() {
   const [selectedFruitsForComparison, setSelectedFruitsForComparison] = useState([])
   const [showComparison, setShowComparison] = useState(false)
   const [selectedPost, setSelectedPost] = useState(null)
+  const [wpPosts, setWpPosts] = useState([])
+const [wpLoading, setWpLoading] = useState(true)
+  useEffect(() => {
+  getWordPressPosts().then((posts) => {
+    setWpPosts(posts)
+    setWpLoading(false)
+  })
+}, [])
   // Refs for smooth scrolling
   const featuredFruitsRef = useRef(null)
 
@@ -495,10 +516,10 @@ export default function FruitBlogWebsite() {
       <section>
         <h2 className="mb-6 text-2xl font-bold">Latest Posts</h2>
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-          {getMyPosts().length === 0 && (
+          {wpPosts.length === 0 && (
             <p className="text-muted-foreground">Abhi koi post nahi hai.</p>
           )}
-          {getMyPosts().map((post) => (
+          {wpPosts.map((post) => (
             <div key={post.file} className="card overflow-hidden cursor-pointer" onClick={() => setSelectedPost(post)}>
               {post.image && (
                 <img src={post.image} alt={post.title} className="h-48 w-full object-cover" />
