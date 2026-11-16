@@ -164,6 +164,45 @@ const [wpLoading, setWpLoading] = useState(true)
     setWpLoading(false)
   })
 }, [])
+  // Facebook Preview ke liye - Har post ka Title / Photo khud set hoga
+function setShareMeta(post) {
+  if (!post) return
+  const title = post.title + " | Roshi Fruity"
+  const desc = (post.excerpt || post.body || "").substring(0, 150)
+  const image = post.image || ""
+  document.title = title
+  const setMeta = (prop, content) => {
+    let el = document.querySelector(`meta[property="${prop}"]`)
+    if (!el) {
+      el = document.createElement("meta")
+      el.setAttribute("property", prop)
+      document.head.appendChild(el)
+    }
+    el.setAttribute("content", content)
+  }
+  setMeta("og:title", title)
+  setMeta("og:description", desc)
+  setMeta("og:image", image)
+  setMeta("og:url", window.location.href)
+}
+
+// Link se post kholo - ?post=an-apple-a-day
+useEffect(() => {
+  if (wpPosts.length === 0) return
+  const slug = new URLSearchParams(window.location.search).get("post")
+  if (slug) {
+    const found = wpPosts.find((p) => p.file === slug || p.slug === slug)
+    if (found) {
+      setSelectedPost(found)
+      setShareMeta(found)
+    }
+  }
+}, [wpPosts])
+
+// Jab post khule to us ka Preview update karo
+useEffect(() => {
+  if (selectedPost) setShareMeta(selectedPost)
+}, [selectedPost])
   // Refs for smooth scrolling
   const featuredFruitsRef = useRef(null)
 
@@ -498,7 +537,7 @@ const [wpLoading, setWpLoading] = useState(true)
               <button
                 className="btn btn-default"
                 onClick={() => {
-                  navigator.clipboard.writeText(window.location.origin + "/#" + selectedPost.file)
+                  navigator.clipboard.writeText(window.location.origin + "/?post=" + selectedPost.file)
                   alert("Link Copy Ho Gaya!")
                 }}
               >
