@@ -140,7 +140,7 @@ async function getWordPressPosts() {
         slug: p.slug,
         categories: cats,
         tags: tags,
-        file: "wp-" + p.id,
+        file: p.slug,
       }
     })
   } catch (e) {
