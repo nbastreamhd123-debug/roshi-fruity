@@ -568,7 +568,8 @@ useEffect(() => {
                 <h3 className="card-title text-xl">{post.title}</h3>
               </div>
               <div className="card-content">
-                <p className="text-sm text-muted-foreground whitespace-pre-line">{post.body}</p>
+                <p className="text-sm text-muted-foreground whitespace-pre-wrap">{post.body ? post.body.slice(0, 180) + '...' : ''}</p>
+<button onClick={(e) => { e.stopPropagation(); setSelectedPost(post); }} style={{ backgroundColor: '#e60000', color: 'white', border: 'none', padding: '10px 20px', borderRadius: '6px', fontWeight: 'bold', cursor: 'pointer', marginTop: '10px' }}>READ MORE</button>
               </div>
             </div>
           ))}
