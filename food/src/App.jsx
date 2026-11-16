@@ -560,7 +560,7 @@ useEffect(() => {
             <p className="text-muted-foreground">Abhi koi post nahi hai.</p>
           )}
           {wpPosts.map((post) => (
-            <div key={post.file} className="card overflow-hidden cursor-pointer" onClick={() => setSelectedPost(post)}>
+            <div key={post.file} className="card overflow-hidden cursor-pointer" onClick={() => window.location.href = `/?post=${post.slug}`}>
               {post.image && (
                 <img src={post.image} alt={post.title} className="h-48 w-full object-cover" />
               )}
@@ -569,7 +569,7 @@ useEffect(() => {
               </div>
               <div className="card-content">
                 <p className="text-sm text-muted-foreground whitespace-pre-wrap">{post.body ? post.body.slice(0, 180) + '...' : ''}</p>
-<button onClick={(e) => { e.stopPropagation(); setSelectedPost(post); }} style={{ backgroundColor: '#e60000', color: 'white', border: 'none', padding: '10px 20px', borderRadius: '6px', fontWeight: 'bold', cursor: 'pointer', marginTop: '10px' }}>READ MORE</button>
+                <button onClick={(e) => { e.stopPropagation(); window.location.href = `/?post=${post.slug}`; }} style={{ backgroundColor: '#e60000', color: 'white', border: 'none', padding: '10px 20px', borderRadius: '6px', fontWeight: 'bold', cursor: 'pointer' }}>READ MORE</button>
               </div>
             </div>
           ))}
