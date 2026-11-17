@@ -144,7 +144,6 @@ async function getWordPressPosts() {
       }
     })
   } catch (e) {
-
     return []
   }
 }
@@ -157,52 +156,52 @@ export default function FruitBlogWebsite() {
   const [showComparison, setShowComparison] = useState(false)
   const [selectedPost, setSelectedPost] = useState(null)
   const [wpPosts, setWpPosts] = useState([])
-const [wpLoading, setWpLoading] = useState(true)
+  const [wpLoading, setWpLoading] = useState(true)
   useEffect(() => {
-  getWordPressPosts().then((posts) => {
-    setWpPosts(posts)
-    setWpLoading(false)
-  })
-}, [])
+    getWordPressPosts().then((posts) => {
+      setWpPosts(posts)
+      setWpLoading(false)
+    })
+  }, [])
   // Facebook Preview ke liye - Har post ka Title / Photo khud set hoga
-function setShareMeta(post) {
-  if (!post) return
-  const title = post.title + " | Roshi Fruity"
-  const desc = (post.excerpt || post.body || "").substring(0, 150)
-  const image = post.image || ""
-  document.title = title
-  const setMeta = (prop, content) => {
-    let el = document.querySelector(`meta[property="${prop}"]`)
-    if (!el) {
-      el = document.createElement("meta")
-      el.setAttribute("property", prop)
-      document.head.appendChild(el)
+  function setShareMeta(post) {
+    if (!post) return
+    const title = post.title + " | Roshi Fruity"
+    const desc = (post.excerpt || post.body || "").substring(0, 150)
+    const image = post.image || ""
+    document.title = title
+    const setMeta = (prop, content) => {
+      let el = document.querySelector(`meta[property="${prop}"]`)
+      if (!el) {
+        el = document.createElement("meta")
+        el.setAttribute("property", prop)
+        document.head.appendChild(el)
+      }
+      el.setAttribute("content", content)
     }
-    el.setAttribute("content", content)
+    setMeta("og:title", title)
+    setMeta("og:description", desc)
+    setMeta("og:image", image)
+    setMeta("og:url", window.location.href)
   }
-  setMeta("og:title", title)
-  setMeta("og:description", desc)
-  setMeta("og:image", image)
-  setMeta("og:url", window.location.href)
-}
 
-// Link se post kholo - ?post=an-apple-a-day
-useEffect(() => {
-  if (wpPosts.length === 0) return
-  const slug = new URLSearchParams(window.location.search).get("post")
-  if (slug) {
-    const found = wpPosts.find((p) => p.file === slug || p.slug === slug)
-    if (found) {
-      setSelectedPost(found)
-      setShareMeta(found)
+  // Link se post kholo - ?post=an-apple-a-day
+  useEffect(() => {
+    if (wpPosts.length === 0) return
+    const slug = new URLSearchParams(window.location.search).get("post")
+    if (slug) {
+      const found = wpPosts.find((p) => p.file === slug || p.slug === slug)
+      if (found) {
+        setSelectedPost(found)
+        setShareMeta(found)
+      }
     }
-  }
-}, [wpPosts])
+  }, [wpPosts])
 
-// Jab post khule to us ka Preview update karo
-useEffect(() => {
-  if (selectedPost) setShareMeta(selectedPost)
-}, [selectedPost])
+  // Jab post khule to us ka Preview update karo
+  useEffect(() => {
+    if (selectedPost) setShareMeta(selectedPost)
+  }, [selectedPost])
   // Refs for smooth scrolling
   const featuredFruitsRef = useRef(null)
 
@@ -486,7 +485,7 @@ useEffect(() => {
                     </div>
 
                     <div>
-                      <h4 className="font-semibold mb-2 text-red-600">⚠️ Not Recommended For</h4>
+                      <h4 className="font-semibold mb-2 text-red-600">⚠ Not Recommended For</h4>
                       <div className="space-y-1">
                         {fruit.notRecommendedFor.map((condition, index) => (
                           <div key={index} className="text-xs bg-red-50 p-2 rounded border-l-2 border-red-500">
@@ -524,35 +523,9 @@ useEffect(() => {
             </div>
           ))}
         </div>
-              {/* Post Open - Jab click karo */}
-      {selectedPost && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4" onClick={() => setSelectedPost(null)}>
-          <div className="card max-w-2xl w-full max-h- overflow-auto bg-white p-4" onClick={(e) => e.stopPropagation()}>
-            {selectedPost.image && (
-              <img src={selectedPost.image} alt={selectedPost.title} className="w-full h-64 object-cover rounded-lg mb-4" />
-            )}
-            <h2 className="text-2xl font-bold mb-2">{selectedPost.title}</h2>
-            <p className="text-sm text-muted-foreground whitespace-pre-line mb-4">{selectedPost.body}</p>
-            <div className="flex gap-2">
-              <button
-                className="btn btn-default"
-                onClick={() => {
-                  navigator.clipboard.writeText(window.location.origin + "/?post=" + selectedPost.file)
-                  alert("Link Copy Ho Gaya!")
-                }}
-              >
-                Copy Link
-              </button>
-              <button className="btn btn-outline" onClick={() => setSelectedPost(null)}>
-                Close
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-
       </section>
-          {/* Latest Posts - Panel se */}
+
+      {/* Latest Posts - Panel se */}
       <section>
         <h2 className="mb-6 text-2xl font-bold">Latest Posts</h2>
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
@@ -1060,12 +1033,39 @@ useEffect(() => {
     <div className="min-h-screen bg-background">
       {renderHeader()}
 
-      <main className="container mx-auto px-4 py-8">
-        {activeSection === "home" && renderHome()}
-        {activeSection === "about" && renderAbout()}
-        {activeSection === "contact" && renderContact()}
-        {activeSection === "compare" && renderCompare()}
-      </main>
+      {selectedPost ? (
+        <div className="min-h-screen bg-white">
+          <div className="container mx-auto px-4 py-8 max-w-2xl">
+            <h1 className="text-3xl md:text-4xl font-bold mb-2 leading-tight">{selectedPost.title}</h1>
+            <p className="text-sm text-muted-foreground mb-6">{selectedPost.date ? new Date(selectedPost.date).toLocaleDateString() : ""}</p>
+            {selectedPost.image && (
+              <img src={selectedPost.image} alt={selectedPost.title} className="w-full object-cover rounded-lg mb-6" />
+            )}
+            <p className="text-base leading-8 whitespace-pre-line mb-6">{selectedPost.body}</p>
+            <div className="flex gap-2">
+              <button
+                className="btn btn-default"
+                onClick={() => {
+                  navigator.clipboard.writeText(window.location.origin + "/?post=" + selectedPost.slug)
+                  alert("Link Copy Ho Gaya!")
+                }}
+              >
+                Copy Link
+              </button>
+              <button className="btn btn-outline" onClick={() => window.location.href = "/"}>
+                Close
+              </button>
+            </div>
+          </div>
+        </div>
+      ) : (
+        <main className="container mx-auto px-4 py-8">
+          {activeSection === "home" && renderHome()}
+          {activeSection === "about" && renderAbout()}
+          {activeSection === "contact" && renderContact()}
+          {activeSection === "compare" && renderCompare()}
+        </main>
+      )}
 
       <footer className="border-t bg-muted py-8">
         <div className="container mx-auto px-4">
