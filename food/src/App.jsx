@@ -534,9 +534,10 @@ export default function FruitBlogWebsite() {
           )}
           {wpPosts.map((post) => (
             <div key={post.file} className="card overflow-hidden cursor-pointer" onClick={() => window.location.href = `/?post=${post.slug}`}>
-              {post.image && (
-                <img src={post.image} alt={post.title} className="h-48 w-full object-cover" />
-              )}
+             {(post.image || post._embedded?.['wp:featuredmedia']?.[0]?.source_url) && (
+<img src={post.image || post._embedded?.['wp:featuredmedia']?.[0]?.source_url} alt={post.title} className="h-48 w-full object-cover" />
+)}
+           
               <div className="card-header">
                 <h3 className="card-title text-xl">{post.title}</h3>
               </div>
