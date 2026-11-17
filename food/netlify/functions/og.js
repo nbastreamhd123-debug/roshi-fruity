@@ -1,4 +1,4 @@
-exports.handler = async (event) => {
+export const handler = async (event) => {
   const slug = event.queryStringParameters.post || "";
   const WP = "https://985680751.online/wp-json/wp/v2/posts?slug=" + slug + "&_embed";
   let title = slug.replace(/-/g, " ") + " | Roshi Fruity";
