@@ -1046,7 +1046,7 @@ export default function FruitBlogWebsite() {
               <button
                 className="btn btn-default"
                 onClick={() => {
-                  navigator.clipboard.writeText(window.location.origin + "/?post=" + selectedPost.slug)
+                navigator.clipboard.writeText(window.location.origin + "/.netlify/functions/og?post=" + selectedPost.slug)
                   alert("Link Copy Ho Gaya!")
                 }}
               >
