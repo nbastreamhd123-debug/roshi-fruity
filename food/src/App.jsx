@@ -134,6 +134,7 @@ async function getWordPressPosts() {
         title: stripHtml(p.title?.rendered),
         body: stripHtml(p.content?.rendered),
         excerpt: stripHtml(p.excerpt?.rendered),
+        bodyHtml: p.content?.rendered,
         image: img,
         date: p.date,
         link: p.link,
@@ -157,6 +158,9 @@ export default function FruitBlogWebsite() {
   const [selectedPost, setSelectedPost] = useState(null)
   const [wpPosts, setWpPosts] = useState([])
   const [wpLoading, setWpLoading] = useState(true)
+useEffect(() => {
+  if (selectedPost) window.scrollTo(0, 0);
+}, [selectedPost]);
   useEffect(() => {
     getWordPressPosts().then((posts) => {
       setWpPosts(posts)
@@ -543,8 +547,9 @@ export default function FruitBlogWebsite() {
               </div>
               <div className="card-content">
                 <p className="text-sm text-muted-foreground whitespace-pre-wrap">{post.body ? post.body.slice(0, 180) + '...' : ''}</p>
-                <button onClick={(e) => { e.stopPropagation(); window.location.href = `/?post=${post.slug}`; }} style={{ backgroundColor: '#e60000', color: 'white', border: 'none', padding: '10px 20px', borderRadius: '6px', fontWeight: 'bold', cursor: 'pointer' }}>READ MORE</button>
-              </div>
+ <button onClick={(e) => { e.stopPropagation(); window.location.href = `/?post=${post.slug}`; }} style={{ backgroundColor: '#e60000', color: 'white', border: 'none', padding: '10px 20px', borderRadius: '6px', fontWeight: 'bold', cursor: 'pointer' }}>READ MORE</button>
+                <button onClick={(e) => { e.stopPropagation(); navigator.clipboard.writeText(window.location.origin + "/.netlify/functions/og?post=" + post.slug); alert("Link Copy Ho Gaya!"); }} style={{ backgroundColor: '#008000', color: 'white', border: 'none', padding: '10px 20px', borderRadius: '6px', fontWeight: 'bold', cursor: 'pointer', marginLeft: '8px' }}>COPY LINK</button>
+            </div>
             </div>
           ))}
         </div>
@@ -1042,7 +1047,7 @@ export default function FruitBlogWebsite() {
             {selectedPost.image && (
               <img src={selectedPost.image} alt={selectedPost.title} className="w-full object-cover rounded-lg mb-6" />
             )}
-            <p className="text-base leading-8 whitespace-pre-line mb-6">{selectedPost.body}</p>
+           <div className="text-base leading-8 mb-6 space-y-5 [&_p]:mb-5 [&_h2]:text-2xl [&_h2]:font-bold [&_h2]:mt-8 [&_h3]:text-xl [&_h3]:font-bold [&_h3]:mt-6" dangerouslySetInnerHTML={{ __html: selectedPost.bodyHtml || selectedPost.body }} />
             <div className="flex gap-2">
               <button
                 className="btn btn-default"
