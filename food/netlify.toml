@@ -1,12 +1,12 @@
 [build]
-command = "npm run build"
-publish = "dist"
+  command = "npm run build"
+  publish = "dist"
+  functions = "netlify/functions"
 
 [[headers]]
-for = "/*"
+  for = "/*"
   [headers.values]
-  Cache-Control = "public, max-age=3600"
-
+    Cache-Control = "public, max-age=3600"
 
 [[redirects]]
   from = "/ads.txt"
