@@ -1,5 +1,5 @@
 export const handler = async (event) => {
-  const slug = event.queryStringParameters.post || "";
+  const slug = event.queryStringParameters?.post || "";
   const WP = "https://985680751.online/wp-json/wp/v2/posts?slug=" + slug + "&_embed";
   let title = slug.replace(/-/g, " ") + " | Roshi Fruity";
   let desc = slug.replace(/-/g, " ");
@@ -16,6 +16,7 @@ export const handler = async (event) => {
     }
   } catch (e) {}
   const target = "https://roshi-fruity1.netlify.app/?post=" + slug;
-  const html = '<!doctype html><html><head><meta charset="utf-8"><title>' + title + '</title><meta property="og:title" content="' + title + '"><meta property="og:description" content="' + desc + '"><meta property="og:image" content="' + image + '"><meta http-equiv="refresh" content="0;url=' + target + '"></head><body></body></html>';
+  const ogUrl = "https://roshi-fruity1.netlify.app/.netlify/functions/og?post=" + slug;
+  const html = '<!doctype html><html><head><meta charset="utf-8"><title>' + title + '</title><meta property="og:title" content="' + title + '"><meta property="og:description" content="' + desc + '"><meta property="og:image" content="' + image + '"><meta property="og:url" content="' + ogUrl + '"><meta property="og:type" content="website"></head><body><p>Loading...</p><script>window.location.href="' + target + '";</script></body></html>';
   return { statusCode: 200, headers: { "Content-Type": "text/html" }, body: html };
 };
