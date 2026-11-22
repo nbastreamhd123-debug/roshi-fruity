@@ -528,14 +528,6 @@ useEffect(() => {
           ))}
         </div>
       </section>
-
-      {/* Latest Posts - Panel se */}
-      <section>
-        <h2 className="mb-6 text-2xl font-bold">Latest Posts</h2>
-        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-          {wpPosts.length === 0 && (
-            <p className="text-muted-foreground">Abhi koi post nahi hai.</p>
-          )}
           {wpPosts.map((post) => (
             <div key={post.file} className="card overflow-hidden cursor-pointer" onClick={() => window.location.href = `/?post=${post.slug}`}>
              {(post.image || post._embedded?.['wp:featuredmedia']?.[0]?.source_url) && (
