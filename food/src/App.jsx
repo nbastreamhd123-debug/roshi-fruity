@@ -8,7 +8,7 @@ import Apple from "./assets/Apple.jpg"
 import Banana from "./assets/Banana.jpg"
 import orange from "./assets/orange.jpg"
 import fruite2 from "./assets/fruite2.jpg"
-const WP_API = "https://985680751.online/wp-json/wp/v2/posts?per_page=100&_embed"
+const WP_API = "https://985680751.online/wp-json/wp/v2/posts?per_page=100&orderby=date&order=desc&_embed"
 
 // Mock data for fruits with local images
 const fruitsData = [
@@ -123,7 +123,7 @@ function stripHtml(html) {
 
 async function getWordPressPosts(url = WP_API) {
   try {
-   const res = await fetch(url)
+   const res = await fetch(url, { cache: "no-store" })
     if (!res.ok) return []
     const data = await res.json()
     return data.map((p) => {
