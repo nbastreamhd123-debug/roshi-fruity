@@ -1,0 +1,52 @@
+/* ===== 1 CODE - Sab Fix - Home + Post - WordPress Jaisa ===== */
+
+/* Home page + Post page - sab kuch beech me, patla */
+main {
+  max-width: 720px !important;
+  margin: 0 auto !important;
+  padding-left: 20px !important;
+  padding-right: 20px !important;
+}
+
+/* Post ka box - WordPress jaisa */
+.wp-post, article, main > div {
+  max-width: 720px !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+  background: #fff !important;
+}
+
+/* Heading - beech me */
+h1, h2 {
+  text-align: center !important;
+  line-height: 1.3 !important;
+  margin-bottom: 12px !important;
+  margin-top: 24px !important;
+}
+
+/* Image - Home par bhi, Post me bhi - Full Screen NAHI hogi */
+img {
+  width: 100% !important;
+  max-width: 680px !important;
+  max-height: 380px !important;
+  height: auto !important;
+  object-fit: cover !important;
+  display: block !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+  margin-bottom: 24px !important;
+  border-radius: 10px !important;
+}
+
+/* Post ka Text - WordPress jaisa gap */
+p {
+  margin-bottom: 20px !important;
+  line-height: 1.85 !important;
+  font-size: 17px !important;
+  color: #222 !important;
+}
+
+/* Post ke andar wali image bhi choti */
+.wp-post img {
+  max-height: 420px !important;
+}
