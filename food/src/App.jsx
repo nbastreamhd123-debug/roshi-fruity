@@ -121,9 +121,9 @@ function stripHtml(html) {
   return tmp.textContent || tmp.innerText || ""
 }
 
-async function getWordPressPosts() {
+async function getWordPressPosts(url = WP_API) {
   try {
-    const res = await fetch(WP_API)
+   const res = await fetch(url)
     if (!res.ok) return []
     const data = await res.json()
     return data.map((p) => {
@@ -192,17 +192,17 @@ useEffect(() => {
   }
 
   // Post open  - ?post=an-apple-a-day
-  useEffect(() => {
-    if (wpPosts.length === 0) return
-    const slug = new URLSearchParams(window.location.search).get("post")
-    if (slug) {
-      const found = wpPosts.find((p) => p.file === slug || p.slug === slug)
-      if (found) {
-        setSelectedPost(found)
-        setShareMeta(found)
-      }
+useEffect(() => {
+  const slug = new URLSearchParams(window.location.search).get("post")
+  if (!slug) return
+  const url = `https://985680751.online/wp-json/wp/v2/posts?slug=${slug}&_embed`
+  getWordPressPosts(url).then((posts) => {
+    if (posts[0]) {
+      setSelectedPost(posts[0])
+      setShareMeta(posts[0])
     }
-  }, [wpPosts])
+  })
+}, [])
 
   // Jab post khule to us ka Preview update karo
   useEffect(() => {
@@ -264,7 +264,7 @@ useEffect(() => {
           <div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary">
             <span className="text-sm font-bold text-primary-foreground">🍎</span>
           </div>
-          <span className="text-xl font-bold">Fruity</span>
+          <span className="text-lg font-bold">Heartfelt Stories</span>
         </div>
 
         {/* Desktop Navigation */}
@@ -1040,11 +1040,11 @@ useEffect(() => {
 <div className="min-h-screen flex items-center justify-center"><p>Loading Post...</p></div>
 ) : selectedPost ? (
         <div className="min-h-screen bg-white">
-          <div className="container mx-auto px-4 py-8 max-w-2xl">
+          <div style={{ maxWidth: "680px", margin: "0 auto", padding: "32px 20px" }}>
             <h1 className="text-3xl md:text-4xl font-bold mb-2 leading-tight">{selectedPost.title}</h1>
             <p className="text-sm text-muted-foreground mb-6">{selectedPost.date ? new Date(selectedPost.date).toLocaleDateString() : ""}</p>
            
-           <img src={selectedPost.image} alt={selectedPost.title} className="w-full rounded-lg mb-6" style={{ maxHeight: "380px", objectFit: "cover", display: "block" }} />
+          <img src={selectedPost.image} alt={selectedPost.title} className="w-full rounded-lg mb-6" style={{ maxHeight: "380px", objectFit: "cover", display: "block", maxWidth: "680px", width: "100%", margin: "0 auto" }} />
             <div className="[&>p]:mb-6 [&>p]:leading-[1.9] [&>p]:text-" dangerouslySetInnerHTML={{ __html: selectedPost.bodyHtml || selectedPost.body }} />
             <div className="flex gap-2">
               <button
