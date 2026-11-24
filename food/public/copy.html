@@ -13,11 +13,13 @@ small{color:#666;display:block;margin:6px 0;word-break:break-all}
 .btns{display:flex;gap:8px}
 button{background:#111;color:#fff;border:0;padding:8px 12px;border-radius:6px;cursor:pointer}
 button.green{background:#0a7a3a}
+#error{color:red;background:#ffe5e5;padding:12px;border-radius:8px;display:none}
 </style>
 </head>
 <body>
 <h1>Post Links Panel</h1>
 <p>Yahan se Netlify wala link ya poori post Title ke saath copy karo. Is page par Ads nahi hain.</p>
+<div id="error"></div>
 <div id="list">Loading...</div>
 <script>
 function strip(html){
@@ -26,41 +28,50 @@ function strip(html){
   return d.innerText||"";
 }
 async function load(){
-  const res = await fetch("https://985680751.online/wp-json/wp/v2/posts?per_page=100&orderby=date&order=desc&_embed", {cache:"no-store"});
-  const posts = await res.json();
   const box = document.getElementById("list");
-  box.innerHTML = "";
-  posts.forEach(p=>{
-    const slug = p.slug;
-    const link = window.location.origin + "/?post=" + slug;
-    const title = strip(p.title.rendered);
-    const fullText = strip(p.content.rendered);
-    const div = document.createElement("div");
-    div.className = "item";
-    div.innerHTML = "<b>"+title+"</b><small>"+link+"</small>";
-    const btns = document.createElement("div");
-    btns.className="btns";
-    const b1 = document.createElement("button");
-    b1.textContent = "Copy Link";
-    b1.onclick = async ()=>{
-      await navigator.clipboard.writeText(link);
-      b1.textContent = "Copied!";
-      setTimeout(()=>b1.textContent="Copy Link",1500);
-    };
-    const b2 = document.createElement("button");
-    b2.className="green";
-    b2.textContent = "Copy Full Post";
-    b2.onclick = async ()=>{
-      const full = title + "\n\n" + link + "\n\n" + fullText;
-      await navigator.clipboard.writeText(full);
-      b2.textContent = "Copied!";
-      setTimeout(()=>b2.textContent="Copy Full Post",1500);
-    };
-    btns.appendChild(b1);
-    btns.appendChild(b2);
-    div.appendChild(btns);
-    box.appendChild(div);
-  });
+  const err = document.getElementById("error");
+  try{
+    const res = await fetch("https://985680751.online/wp-json/wp/v2/posts?per_page=100&orderby=date&order=desc&_embed", {cache:"no-store"});
+    if(!res.ok) throw new Error("Status: " + res.status);
+    const posts = await res.json();
+    if(!posts.length) throw new Error("WordPress me koi Published post nahi mili");
+    box.innerHTML = "";
+    posts.forEach(p=>{
+      const slug = p.slug;
+      const link = window.location.origin + "/?post=" + slug;
+      const title = strip(p.title.rendered);
+      const fullText = strip(p.content.rendered);
+      const div = document.createElement("div");
+      div.className = "item";
+      div.innerHTML = "<b>"+title+"</b><small>"+link+"</small>";
+      const btns = document.createElement("div");
+      btns.className="btns";
+      const b1 = document.createElement("button");
+      b1.textContent = "Copy Link";
+      b1.onclick = async ()=>{
+        await navigator.clipboard.writeText(link);
+        b1.textContent = "Copied!";
+        setTimeout(()=>b1.textContent="Copy Link",1500);
+      };
+      const b2 = document.createElement("button");
+      b2.className="green";
+      b2.textContent = "Copy Full Post";
+      b2.onclick = async ()=>{
+        const full = title + "\n\n" + link + "\n\n" + fullText;
+        await navigator.clipboard.writeText(full);
+        b2.textContent = "Copied!";
+        setTimeout(()=>b2.textContent="Copy Full Post",1500);
+      };
+      btns.appendChild(b1);
+      btns.appendChild(b2);
+      div.appendChild(btns);
+      box.appendChild(div);
+    });
+  }catch(e){
+    box.innerHTML = "";
+    err.style.display="block";
+    err.textContent = "List nahi aayi: " + e.message + " - 1 baar Refresh dabao, agar phir bhi na aaye to WordPress khol kar dekho post Published hai ya nahi.";
+  }
 }
 load();
 </script>
