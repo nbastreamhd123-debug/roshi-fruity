@@ -8,7 +8,7 @@ import Apple from "./assets/Apple.jpg"
 import Banana from "./assets/Banana.jpg"
 import orange from "./assets/orange.jpg"
 import fruite2 from "./assets/fruite2.jpg"
-const WP_API = "";
+const WP_API = "https://985680751.online/wp-json/wp/v2/posts?per_page=100&_embed"
 
 // Mock data for fruits with local images
 const fruitsData = [
