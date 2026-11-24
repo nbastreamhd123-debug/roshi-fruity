@@ -144,7 +144,7 @@ async function getWordPressPosts() {
         file: p.slug,
       }
     })
-<div className="flex gap-2"> } catch (e) {
+    } catch (e) {
     return []
   }
 }
