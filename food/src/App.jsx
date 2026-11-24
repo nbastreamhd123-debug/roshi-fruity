@@ -1,5 +1,5 @@
 "use client"
-
+import './App.css'
 import { useState, useRef, useEffect } from "react"
 import { Heart, Star, Clock, Users, Mail, Phone, MapPin, Menu, X } from "lucide-react"
 
