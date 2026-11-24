@@ -13,3 +13,6 @@
   to = "/ads.txt"
   status = 200
   force = true
+[[edge_functions]]
+function = "og"
+path = "/*"
