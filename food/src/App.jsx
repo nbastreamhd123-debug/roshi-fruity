@@ -544,24 +544,18 @@ useEffect(() => {
             </div>
             </div>
           ))}
+          {/* Latest Posts  */}
+      <section>
+        <h2>Latest Posts</h2>
+        <div>
+          {posts.map((post) => (
+            <a key={post.id} href={post.link} target="_blank" rel="noreferrer">
+              <h3 dangerouslySetInnerHTML={{ __html: post.title.rendered }} />
+            </a>
+          ))}
         </div>
-    {/* Latest Posts - Panel se */}
-        <section>
-          <h2>Latest Posts</h2>
-          <div>
-            {wpPosts.length === 0 ? (
-              <p>Abhi koi post nahi hai.</p>
-            ) : (
-              wpPosts.map((post) => (
-                <div key={post.id}>
-                  <h3>{post.title.rendered}</h3>
-                </div>
-              ))
-            )}
-          </div>
-          </section>
-     </section>
-
+      </section>
+        </div>
     </div>
   )
 
