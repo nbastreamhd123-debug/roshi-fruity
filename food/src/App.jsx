@@ -555,7 +555,6 @@ useEffect(() => {
           ))}
         </div>
       </section>
-        </div>
     </div>
   )
 
