@@ -144,7 +144,7 @@ async function getWordPressPosts() {
         file: p.slug,
       }
     })
-  } catch (e) {
+<div className="flex gap-2"> } catch (e) {
     return []
   }
 }
@@ -158,6 +158,8 @@ export default function FruitBlogWebsite() {
   const [selectedPost, setSelectedPost] = useState(null)
   const [wpPosts, setWpPosts] = useState([])
   const [wpLoading, setWpLoading] = useState(true)
+    const [page, setPage] = useState(1);
+  const postsPerPage = 6;
 useEffect(() => {
   if (selectedPost) window.scrollTo(0, 0);
 }, [selectedPost]);
@@ -189,7 +191,7 @@ useEffect(() => {
     setMeta("og:url", window.location.href)
   }
 
-  // Link se post kholo - ?post=an-apple-a-day
+  // Post open  - ?post=an-apple-a-day
   useEffect(() => {
     if (wpPosts.length === 0) return
     const slug = new URLSearchParams(window.location.search).get("post")
@@ -528,14 +530,15 @@ useEffect(() => {
           ))}
         </div>
       </section>
-          {wpPosts.map((post) => (
+        {wpPosts.slice((page - 1) * postsPerPage, page * postsPerPage).map((post) => (
             <div key={post.file} className="card overflow-hidden cursor-pointer" onClick={() => window.location.href = `/?post=${post.slug}`}>
              {(post.image || post._embedded?.['wp:featuredmedia']?.[0]?.source_url) && (
-<img src={post.image || post._embedded?.['wp:featuredmedia']?.[0]?.source_url} alt={post.title} className="h-48 w-full object-cover" />
+<img src={post.image || post._embedded?.['wp:featuredmedia']?.[0]?.source_url} alt={post.title} className="w-full h-auto"
+ />
 )}
            
               <div className="card-header">
-                <h3 className="card-title text-xl">{post.title}</h3>
+               <h3 className="card-title text-xl" dangerouslySetInnerHTML={{ __html: post.title }} />
               </div>
               <div className="card-content">
                 <p className="text-sm text-muted-foreground whitespace-pre-wrap">{post.body ? post.body.slice(0, 180) + '...' : ''}</p>
@@ -544,6 +547,11 @@ useEffect(() => {
             </div>
             </div>
           ))}
+      <div style={{ textAlign: "center", margin: "20px 0" }}>
+  {[1,2,3,4].map((n) => (
+    <button key={n} onClick={() => setPage(n)} style={{ margin: "0 5px", padding: "8px 14px", background: page === n ? "green" : "white", color: page === n ? "white" : "black", border: "1px solid #ccc", borderRadius: "5px" }}>{n}</button>
+  ))}
+</div>
     </div>
   )
 
@@ -1028,15 +1036,16 @@ useEffect(() => {
     <div className="min-h-screen bg-background">
       {renderHeader()}
 
-      {selectedPost ? (
+  {new URLSearchParams(window.location.search).get("post") && !selectedPost ? (
+<div className="min-h-screen flex items-center justify-center"><p>Loading Post...</p></div>
+) : selectedPost ? (
         <div className="min-h-screen bg-white">
           <div className="container mx-auto px-4 py-8 max-w-2xl">
             <h1 className="text-3xl md:text-4xl font-bold mb-2 leading-tight">{selectedPost.title}</h1>
             <p className="text-sm text-muted-foreground mb-6">{selectedPost.date ? new Date(selectedPost.date).toLocaleDateString() : ""}</p>
-            {selectedPost.image && (
-              <img src={selectedPost.image} alt={selectedPost.title} className="w-full object-cover rounded-lg mb-6" />
-            )}
-           <div className="text-base leading-8 mb-6 space-y-5 [&_p]:mb-5 [&_h2]:text-2xl [&_h2]:font-bold [&_h2]:mt-8 [&_h3]:text-xl [&_h3]:font-bold [&_h3]:mt-6" dangerouslySetInnerHTML={{ __html: selectedPost.bodyHtml || selectedPost.body }} />
+           
+           <img src={selectedPost.image} alt={selectedPost.title} className="w-full rounded-lg mb-6" style={{ maxHeight: "380px", objectFit: "cover", display: "block" }} />
+            <div className="[&>p]:mb-6 [&>p]:leading-[1.9] [&>p]:text-" dangerouslySetInnerHTML={{ __html: selectedPost.bodyHtml || selectedPost.body }} />
             <div className="flex gap-2">
               <button
                 className="btn btn-default"
