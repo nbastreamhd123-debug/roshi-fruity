@@ -545,7 +545,22 @@ useEffect(() => {
             </div>
           ))}
         </div>
-
+    {/* Latest Posts - Panel se */}
+        <section>
+          <h2>Latest Posts</h2>
+          <div>
+            {wpPosts.length === 0 ? (
+              <p>Abhi koi post nahi hai.</p>
+            ) : (
+              wpPosts.map((post) => (
+                <div key={post.id}>
+                  <h3>{post.title.rendered}</h3>
+                </div>
+              ))
+            )}
+          </div>
+          </section>
+     </section>
 
     </div>
   )
